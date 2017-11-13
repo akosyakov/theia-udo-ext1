@@ -19,13 +19,13 @@ import { ContainerModule } from "inversify";
 export default new ContainerModule(bind => {
     // add your contribution bindings here
 
-    bind(HelloWorldHandler).toSelf();
-    bind(CommandContribution).to(UdosSecondExtensionCommandContribution);
-    bind(MenuContribution).to(UdosSecondExtensionMenuContribution);
+    bind(HelloWorldHandler).toSelf().inSingletonScope();
+    bind(CommandContribution).to(UdosSecondExtensionCommandContribution).inSingletonScope();
+    bind(MenuContribution).to(UdosSecondExtensionMenuContribution).inSingletonScope();
     bind(MiniWidget).toSelf();
     bind(WidgetFactory).toDynamicValue(context => ({
         id: MINI_WIDGET_FACTORY_ID,
         createWidget: () => context.container.get<MiniWidget>(MiniWidget)
-    }));
+    })).inSingletonScope();
 
 });

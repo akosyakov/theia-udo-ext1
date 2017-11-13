@@ -1,29 +1,14 @@
 import { injectable, inject } from "inversify";
-import { CommandContribution, CommandRegistry, MenuContribution, MenuModelRegistry, MAIN_MENU_BAR, MessageService, CommandHandler } from "@theia/core/lib/common";
+import { CommandContribution, CommandRegistry, MenuContribution, MenuModelRegistry, MessageService, CommandHandler } from "@theia/core/lib/common";
 import { CommonMenus, VirtualWidget } from "@theia/core/lib/browser";
 import { h } from '@phosphor/virtualdom/lib';
 import { WidgetManager } from '@theia/core/lib/browser/widget-manager';
 import { FrontendApplication } from '@theia/core/lib/browser';
 
-
 export const UdosSecondExtensionCommand = {
     id: 'UdosSecondExtension.command',
     label: "Shows a message"
 };
-
-@injectable()
-export class UdosSecondExtensionCommandContribution implements CommandContribution {
-
-    constructor(
-        @inject(HelloWorldHandler) private readonly helloWorldHandler: HelloWorldHandler,
-    ) { }
-
-
-    registerCommands(registry: CommandRegistry): void {
-        registry.registerCommand(UdosSecondExtensionCommand);
-        registry.registerHandler(UdosSecondExtensionCommand.id, this.helloWorldHandler);
-    }
-}
 
 @injectable()
 export class HelloWorldHandler implements CommandHandler {
@@ -46,21 +31,30 @@ export class HelloWorldHandler implements CommandHandler {
         return true;
     }
 
+}
 
+@injectable()
+export class UdosSecondExtensionCommandContribution implements CommandContribution {
+
+    constructor(
+        @inject(HelloWorldHandler) private readonly helloWorldHandler: HelloWorldHandler,
+    ) { }
+
+
+    registerCommands(registry: CommandRegistry): void {
+        registry.registerCommand(UdosSecondExtensionCommand);
+        registry.registerHandler(UdosSecondExtensionCommand.id, this.helloWorldHandler);
+    }
 }
 
 @injectable()
 export class UdosSecondExtensionMenuContribution implements MenuContribution {
 
     registerMenus(menus: MenuModelRegistry): void {
-        menus.registerMenuAction([
-            MAIN_MENU_BAR,
-            CommonMenus.EDIT_MENU,
-            CommonMenus.EDIT_MENU_FIND_REPLACE_GROUP
-        ], {
-                commandId: UdosSecondExtensionCommand.id,
-                label: 'Say Hello to Udo'
-            });
+        menus.registerMenuAction(CommonMenus.EDIT_FIND, {
+            commandId: UdosSecondExtensionCommand.id,
+            label: 'Say Hello to Udo'
+        });
     }
 }
 
@@ -68,7 +62,7 @@ export class UdosSecondExtensionMenuContribution implements MenuContribution {
 export const MINI_WIDGET_FACTORY_ID = 'miniwidget';
 
 
-
+@injectable()
 export class MiniWidget extends VirtualWidget {
 
     protected readonly titleNode: HTMLDivElement;
